@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבחן האגו - צור חידון</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; color: #333; text-align: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 20px; max-width: 500px; margin: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .q-box { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 10px; }
+        button { background: #6C63FF; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold; }
+        .hidden { display: none; }
+        input[readonly] { background: #eee; text-align: center; border: 1px dashed #6C63FF; color: #6C63FF; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 id="greeting">היי! בוא ניצור את החידון</h2>
+        
+        <div id="quizCreator">
+            <p>בחר את התשובה הנכונה לגביך:</p>
+            <div class="q-box">
+                <p>1. מה המאכל האהוב עליי?</p>
+                <button onclick="setAnswer(0, 'המבורגר')">המבורגר 🍔</button>
+                <button onclick="setAnswer(0, 'פיצה')">פיצה 🍕</button>
+                <button onclick="setAnswer(0, 'סושי')">סושי 🍣</button>
+            </div>
+            </div>
+
+        <div id="resultArea" class="hidden">
+            <h3>החידון באוויר! 🔥</h3>
+            <p>שתף את הלינק עם החברים:</p>
+            <input type="text" id="shareUrl" readonly>
+            <button onclick="copyUrl()">העתק לינק</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = { /* אותו קונפיג ממקודם */
+            apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
+            authDomain: "social-app-834c9.firebaseapp.com",
+            projectId: "social-app-834c9",
+            storageBucket: "social-app-834c9.firebasestorage.app",
+            messagingSenderId: "230666122567",
+            appId: "1:230666122567:web:ce69416816347597c2c862"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let currentUser = null;
+        let answers = {};
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('greeting').innerText = `היי ${user.displayName}, בוא ניצור חידון!`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        window.setAnswer = async (qIndex, val) => {
+            answers[qIndex] = val;
+            
+            // שומרים ל-Firestore (בדוגמה הזו שומרים אחרי שאלה אחת, בגרסה מלאה נחכה לסוף)
+            const quizId = currentUser.uid;
+            await setDoc(doc(db, "quizzes", quizId), {
+                creatorName: currentUser.displayName,
+                answers: answers,
+                createdAt: new Date()
+            });
+
+            document.getElementById('quizCreator').classList.add('hidden');
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('shareUrl').value = `${window.location.origin}/quiz.html?id=${quizId}`;
+        };
+
+        window.copyUrl = () => {
+            const el = document.getElementById('shareUrl');
+            el.select();
+            document.execCommand('copy');
+            alert("הלינק הועתק!");
+        };
+    </script>
+</body>
+</html>
