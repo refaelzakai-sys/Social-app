@@ -4,14 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מבחן האגו - כניסה</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #6C63FF; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0; }
-        .login-card { background: white; color: #333; padding: 40px; border-radius: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); text-align: center; width: 90%; max-width: 400px; }
-        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #6C63FF; }
-        .google-btn { background: #4285F4; color: white; border: none; padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; transition: 0.3s; }
-        .google-btn:hover { background: #357ae8; transform: translateY(-3px); }
-        footer { position: fixed; bottom: 20px; font-size: 0.9rem; }
-        footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
+    
+    <meta name="theme-color" content="#6C63FF">
+    <link rel="manifest" href="manifest.json"> <style>
+        /* 1. רספונסיביות מלאה */
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: linear-gradient(135deg, #6C63FF 0%, #4B45B2 100%); 
+            color: white; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            margin: 0; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-card { 
+            background: white; 
+            color: #333; 
+            padding: 2rem; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            text-align: center; 
+            width: 100%; 
+            max-width: 400px; /* לא יהיה רחב מדי במחשב */
+            transition: transform 0.3s ease;
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #6C63FF; }
+        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; }
+
+        /* 2. תיקון כפתור גוגל */
+        .google-btn { 
+            background: #fff; 
+            color: #757575; 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            border-radius: 50px; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            width: 100%; 
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .google-btn:hover { background: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .google-icon { width: 24px; height: 24px; }
+
+        /* כפתור התקנה */
+        #installBtn {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: none; /* יופיע רק אם אפשר להתקין */
+            cursor: pointer;
+        }
+
+        footer { margin-top: auto; padding: 20px; font-size: 1rem; }
+        footer a { color: #FFD700; text-decoration: none; font-weight: bold; border-bottom: 2px solid transparent; transition: 0.3s; }
+        footer a:hover { border-bottom: 2px solid #FFD700; }
+
+        /* התאמה למסכים קטנים מאוד */
+        @media (max-width: 350px) {
+            h1 { font-size: 1.8rem; }
+            .login-card { padding: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -19,10 +86,13 @@
     <div class="login-card">
         <h1>מבחן האגו 🤫</h1>
         <p>כדי להתחיל ליצור חידון שיוכיח מי החברים האמיתיים שלך, התחבר בקליק:</p>
+        
         <button class="google-btn" id="loginBtn">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/pwa_u_blue.png" width="20" alt="G">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="Google Logo">
             התחברות עם Google
         </button>
+
+        <button id="installBtn">התקן אפליקציה 📲</button>
     </div>
 
     <footer>
@@ -31,7 +101,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
@@ -46,16 +116,40 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        /* 4. פתרון לבעיית ההתחברות: שימוש ב-Redirect במקום Popup */
+        // בדפדפנים של פלאפון (במיוחד בתוך אפליקציות כמו וואטסאפ), פופ-אפים נחסמים.
         document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    // התחברות הצליחה - מעבר לדף יצירת החידון
-                    window.location.href = 'create.html';
-                }).catch((error) => {
-                    alert("שגיאה בהתחברות: " + error.message);
+            signInWithRedirect(auth, provider);
+        });
+
+        // בדיקה אם המשתמש חזר מהתחברות מוצלחת
+        getRedirectResult(auth).then((result) => {
+            if (result?.user || auth.currentUser) {
+                window.location.href = 'create.html';
+            }
+        });
+
+        /* 3. אפשרות להתקנה (PWA) */
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        installBtn.style.display = 'none';
+                    }
+                    deferredPrompt = null;
                 });
+            }
         });
     </script>
 </body>
 </html>
-
