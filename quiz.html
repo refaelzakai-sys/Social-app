@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבחן האגו - האם תצליח?</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #FF6584; color: white; text-align: center; padding: 20px; margin: 0; }
+        .card { background: white; color: #333; padding: 30px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 450px; margin: auto; }
+        h1 { font-size: 2rem; margin-bottom: 20px; }
+        button { background: #6C63FF; color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 10px; font-size: 1.1rem; font-weight: bold; }
+        .score-box { font-size: 3rem; font-weight: bold; color: #FF6584; margin: 20px 0; }
+        .hidden { display: none; }
+        footer { margin-top: 30px; font-size: 0.8rem; }
+        footer a { color: #fff; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="gameArea">
+        <h2 id="quizTitle">טוען חידון...</h2>
+        <div id="questionContainer">
+            <p id="questionText">מייד מתחילים...</p>
+            <div id="options"></div>
+        </div>
+    </div>
+
+    <div class="card hidden" id="resultArea">
+        <h2>התוצאה שלך:</h2>
+        <div class="score-box" id="finalScore">0</div>
+        <p id="feedbackText"></p>
+        <button onclick="location.href='index.html'">צור חידון משלך 🔥</button>
+    </div>
+
+    <footer>
+        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
+            authDomain: "social-app-834c9.firebaseapp.com",
+            projectId: "social-app-834c9",
+            storageBucket: "social-app-834c9.firebasestorage.app",
+            messagingSenderId: "230666122567",
+            appId: "1:230666122567:web:ce69416816347597c2c862"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // שליחת ה-ID מה-URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const quizId = urlParams.get('id');
+
+        let correctAnswers = {};
+        let userScore = 0;
+
+        async function loadQuiz() {
+            if (!quizId) return alert("לינק לא תקין!");
+            
+            const docRef = doc(db, "quizzes", quizId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                correctAnswers = data.answers;
+                document.getElementById('quizTitle').innerText = `כמה אתם מכירים את ${data.creatorName}?`;
+                showQuestion(0);
+            } else {
+                alert("החידון לא נמצא!");
+            }
+        }
+
+        const questions = ["מה המאכל האהוב עליי?", "מה אני מעדיף בשישי?", "תכונה בולטת?"];
+        const options = [["המבורגר", "פיצה", "סושי"], ["יציאה", "סרט בבית", "שינה"], ["מצחיק", "חכם", "עקשן"]];
+
+        function showQuestion(index) {
+            const container = document.getElementById('options');
+            container.innerHTML = "";
+            document.getElementById('questionText').innerText = questions[index];
+
+            options[index].forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.onclick = () => handleAnswer(index, opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(index, selected) {
+            if (selected === correctAnswers[index]) {
+                userScore += 33; // חישוב גס ל-3 שאלות
+            }
+
+            if (index < questions.length - 1) {
+                showQuestion(index + 1);
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('gameArea').classList.add('hidden');
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = userScore > 90 ? "100" : userScore;
+            
+            let feedback = userScore > 70 ? "וואו! חבר אמת!" : "נו באמת... אתה בכלל מכיר אותי?";
+            document.getElementById('feedbackText').innerText = feedback;
+        }
+
+        loadQuiz();
+    </script>
+</body>
+</html>
