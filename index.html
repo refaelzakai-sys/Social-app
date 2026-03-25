@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבחן האגו - כניסה</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #6C63FF; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0; }
+        .login-card { background: white; color: #333; padding: 40px; border-radius: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); text-align: center; width: 90%; max-width: 400px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #6C63FF; }
+        .google-btn { background: #4285F4; color: white; border: none; padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; transition: 0.3s; }
+        .google-btn:hover { background: #357ae8; transform: translateY(-3px); }
+        footer { position: fixed; bottom: 20px; font-size: 0.9rem; }
+        footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h1>מבחן האגו 🤫</h1>
+        <p>כדי להתחיל ליצור חידון שיוכיח מי החברים האמיתיים שלך, התחבר בקליק:</p>
+        <button class="google-btn" id="loginBtn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/pwa_u_blue.png" width="20" alt="G">
+            התחברות עם Google
+        </button>
+    </div>
+
+    <footer>
+        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
+            authDomain: "social-app-834c9.firebaseapp.com",
+            projectId: "social-app-834c9",
+            storageBucket: "social-app-834c9.firebasestorage.app",
+            messagingSenderId: "230666122567",
+            appId: "1:230666122567:web:ce69416816347597c2c862"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    // התחברות הצליחה - מעבר לדף יצירת החידון
+                    window.location.href = 'create.html';
+                }).catch((error) => {
+                    alert("שגיאה בהתחברות: " + error.message);
+                });
+        });
+    </script>
+</body>
+</html>
+
