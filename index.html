@@ -9,32 +9,46 @@
     <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
 
     <style>
+        * { box-sizing: border-box; }
+        
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
             background: linear-gradient(135deg, #6C63FF 0%, #4B45B2 100%); 
             color: white; 
-            min-height: 100vh; 
+            height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
             margin: 0; 
+            overflow: hidden; /* מונע גלילה מיותרת בנייד */
+        }
+
+        /* מרכז את התוכן בול באמצע המסך */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            box-sizing: border-box;
         }
 
         .login-card { 
             background: white; 
             color: #333; 
-            padding: 2.5rem; 
+            padding: 2.5rem 2rem; 
             border-radius: 30px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
             text-align: center; 
             width: 100%; 
-            max-width: 400px;
+            max-width: 380px;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #6C63FF; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 2.2rem; margin: 0 0 10px 0; color: #6C63FF; }
         p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; color: #555; }
 
         .google-btn { 
@@ -51,41 +65,41 @@
             justify-content: center; 
             gap: 12px; 
             width: 100%; 
-            transition: all 0.3s;
+            transition: all 0.2s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .google-btn:hover { background: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+
+        .google-btn:active { transform: scale(0.98); background: #f1f1f1; }
         .google-icon { width: 22px; height: 22px; }
 
-        #installBtn {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            display: none;
-            cursor: pointer;
-            font-weight: bold;
+        footer { 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 0.95rem; 
+            background: rgba(0,0,0,0.05);
         }
-
-        footer { margin-top: auto; padding: 20px; font-size: 1rem; }
         footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
+
+        /* התאמה למסכים קטנים מאוד */
+        @media (max-height: 500px) {
+            .login-card { padding: 1.5rem; }
+            h1 { font-size: 1.8rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h1>מבחן האגו 🤫</h1>
-        <p>בוא נראה מי החברים האמיתיים שלך. התחבר עכשיו:</p>
-        
-        <button class="google-btn" id="loginBtn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="G">
-            התחברות עם Google
-        </button>
-
-        <button id="installBtn">התקן כאפליקציה 📲</button>
-    </div>
+    <main>
+        <div class="login-card">
+            <h1>מבחן האגו 🤫</h1>
+            <p>בוא נראה מי החברים האמיתיים שלך. התחבר עכשיו:</p>
+            
+            <button class="google-btn" id="loginBtn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="G">
+                התחברות עם Google
+            </button>
+        </div>
+    </main>
 
     <footer>
         נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
@@ -93,7 +107,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
@@ -108,31 +122,22 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        // מאזין למצב התחברות - הפתרון הכי בטוח ללופים
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User is logged in:", user.displayName);
+                window.location.replace('create.html'); // replace מונע חזרה לדף הקודם בלחיצת "אחורה"
+            }
+        });
+
         document.getElementById('loginBtn').addEventListener('click', () => {
             signInWithRedirect(auth, provider);
         });
 
-        getRedirectResult(auth).then((result) => {
-            if (result?.user) {
-                window.location.href = 'create.html';
-            }
-        });
-
-        // לוגיקת התקנה
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBtn').style.display = 'inline-block';
-        });
-
-        document.getElementById('installBtn').addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt = null;
-            }
+        // טיפול בתוצאה אחרי חזרה מגוגל
+        getRedirectResult(auth).catch((error) => {
+            console.error("Auth error:", error.message);
         });
     </script>
 </body>
 </html>
-
