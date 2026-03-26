@@ -3,45 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מבחן האגו - צור חידון</title>
+    <title>מבחן האגו - כניסה</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; color: #333; text-align: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 20px; max-width: 500px; margin: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .q-box { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 10px; }
-        button { background: #6C63FF; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold; }
-        .hidden { display: none; }
-        input[readonly] { background: #eee; text-align: center; border: 1px dashed #6C63FF; color: #6C63FF; font-weight: bold; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #6C63FF 0%, #4B45B2 100%); 
+            color: white; height: 100vh; display: flex; flex-direction: column; margin: 0;
+        }
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .login-card { 
+            background: white; color: #333; padding: 2.5rem 2rem; border-radius: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 380px;
+        }
+        h1 { font-size: 2.2rem; margin: 0 0 10px 0; color: #6C63FF; }
+        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; color: #555; }
+        .google-btn { 
+            background: #fff; color: #757575; border: 1px solid #ddd; padding: 14px; 
+            border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
+        }
+        .google-icon { width: 22px; height: 22px; }
+        footer { padding: 20px; text-align: center; font-size: 0.95rem; }
+        footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <h2 id="greeting">היי! בוא ניצור את החידון</h2>
-        
-        <div id="quizCreator">
-            <p>בחר את התשובה הנכונה לגביך:</p>
-            <div class="q-box">
-                <p>1. מה המאכל האהוב עליי?</p>
-                <button onclick="setAnswer(0, 'המבורגר')">המבורגר 🍔</button>
-                <button onclick="setAnswer(0, 'פיצה')">פיצה 🍕</button>
-                <button onclick="setAnswer(0, 'סושי')">סושי 🍣</button>
-            </div>
-            </div>
-
-        <div id="resultArea" class="hidden">
-            <h3>החידון באוויר! 🔥</h3>
-            <p>שתף את הלינק עם החברים:</p>
-            <input type="text" id="shareUrl" readonly>
-            <button onclick="copyUrl()">העתק לינק</button>
+    <main>
+        <div class="login-card">
+            <h1>מבחן האגו 🤫</h1>
+            <p>בוא נראה מי החברים האמיתיים שלך. התחבר עכשיו:</p>
+            <button class="google-btn" id="loginBtn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon">
+                התחברות עם Google
+            </button>
         </div>
-    </div>
+    </main>
+    <footer>נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a></footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        const firebaseConfig = { /* אותו קונפיג ממקודם */
+        const firebaseConfig = {
             apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
             authDomain: "social-app-834c9.firebaseapp.com",
             projectId: "social-app-834c9",
@@ -51,42 +57,27 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
         const auth = getAuth(app);
-        let currentUser = null;
-        let answers = {};
+        const provider = new GoogleAuthProvider();
 
+        // 1. בדיקה מיידית אם המשתמש כבר מחובר (מונע לופים)
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                currentUser = user;
-                document.getElementById('greeting').innerText = `היי ${user.displayName}, בוא ניצור חידון!`;
-            } else {
-                window.location.href = 'index.html';
+                window.location.replace('create.html');
             }
         });
 
-        window.setAnswer = async (qIndex, val) => {
-            answers[qIndex] = val;
-            
-            // שומרים ל-Firestore (בדוגמה הזו שומרים אחרי שאלה אחת, בגרסה מלאה נחכה לסוף)
-            const quizId = currentUser.uid;
-            await setDoc(doc(db, "quizzes", quizId), {
-                creatorName: currentUser.displayName,
-                answers: answers,
-                createdAt: new Date()
-            });
+        // 2. כפתור ההתחברות
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithRedirect(auth, provider);
+        });
 
-            document.getElementById('quizCreator').classList.add('hidden');
-            document.getElementById('resultArea').classList.remove('hidden');
-            document.getElementById('shareUrl').value = `${window.location.origin}/quiz.html?id=${quizId}`;
-        };
-
-        window.copyUrl = () => {
-            const el = document.getElementById('shareUrl');
-            el.select();
-            document.execCommand('copy');
-            alert("הלינק הועתק!");
-        };
+        // 3. קבלת התוצאה אחרי החזרה מגוגל
+        getRedirectResult(auth).catch((error) => {
+            if (error.code !== 'auth/redirect-cancelled-by-user') {
+                alert("שגיאה: " + error.message);
+            }
+        });
     </script>
 </body>
 </html>
