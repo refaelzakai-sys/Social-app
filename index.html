@@ -4,44 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מבחן האגו - כניסה</title>
+    
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
+
     <style>
         * { box-sizing: border-box; }
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: linear-gradient(135deg, #6C63FF 0%, #4B45B2 100%); 
-            color: white; height: 100vh; display: flex; flex-direction: column; margin: 0;
+            color: white; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            margin: 0; 
+            overflow: hidden;
         }
-        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+
+        /* עיצוב מרכזי */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
         .login-card { 
-            background: white; color: #333; padding: 2.5rem 2rem; border-radius: 30px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 380px;
+            background: white; 
+            color: #333; 
+            padding: 2.5rem 2rem; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            text-align: center; 
+            width: 100%; 
+            max-width: 380px;
+            animation: fadeIn 0.5s ease-out;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h1 { font-size: 2.2rem; margin: 0 0 10px 0; color: #6C63FF; }
         p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; color: #555; }
+
         .google-btn { 
-            background: #fff; color: #757575; border: 1px solid #ddd; padding: 14px; 
-            border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
+            background: #fff; 
+            color: #757575; 
+            border: 1px solid #ddd; 
+            padding: 14px; 
+            border-radius: 50px; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            width: 100%; 
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
+        .google-btn:active { transform: scale(0.98); background: #f1f1f1; }
         .google-icon { width: 22px; height: 22px; }
-        footer { padding: 20px; text-align: center; font-size: 0.95rem; }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ffcccc;
+        }
+
+        footer { 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 0.95rem; 
+        }
         footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <main>
         <div class="login-card">
             <h1>מבחן האגו 🤫</h1>
             <p>בוא נראה מי החברים האמיתיים שלך. התחבר עכשיו:</p>
+            
             <button class="google-btn" id="loginBtn">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="G">
                 התחברות עם Google
             </button>
+
+            <div id="errorDisplay" class="error-msg"></div>
         </div>
     </main>
-    <footer>נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a></footer>
+
+    <footer>
+        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -60,23 +127,37 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // 1. בדיקה מיידית אם המשתמש כבר מחובר (מונע לופים)
+        const errorDisplay = document.getElementById('errorDisplay');
+
+        function showError(msg) {
+            errorDisplay.innerText = msg;
+            errorDisplay.style.display = 'block';
+        }
+
+        // 1. בדיקה אם המשתמש כבר מחובר
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.location.replace('create.html');
             }
         });
 
-        // 2. כפתור ההתחברות
+        // 2. כפתור התחברות
         document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithRedirect(auth, provider);
+            errorDisplay.style.display = 'none';
+            signInWithRedirect(auth, provider).catch(err => {
+                showError("שגיאה ראשונית: " + err.message);
+            });
         });
 
-        // 3. קבלת התוצאה אחרי החזרה מגוגל
-        getRedirectResult(auth).catch((error) => {
-            if (error.code !== 'auth/redirect-cancelled-by-user') {
-                alert("שגיאה: " + error.message);
+        // 3. טיפול בתוצאה שחוזרת מגוגל - כאן נתפוס את הבעיה האמיתית
+        getRedirectResult(auth).then((result) => {
+            if (result?.user) {
+                window.location.replace('create.html');
             }
+        }).catch((error) => {
+            console.error(error);
+            // כאן המערכת תגיד לך בדיוק מה חסר (למשל Auth Domain)
+            showError("שגיאת התחברות: " + error.code + " - " + error.message);
         });
     </script>
 </body>
