@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מבחן האגו - כניסה</title>
     
-    <meta name="theme-color" content="#6C63FF">
-    <link rel="manifest" href="manifest.json"> <style>
-        /* 1. רספונסיביות מלאה */
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
+
+    <style>
         body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            font-family: 'Segoe UI', sans-serif; 
             background: linear-gradient(135deg, #6C63FF 0%, #4B45B2 100%); 
             color: white; 
             min-height: 100vh; 
@@ -25,24 +26,22 @@
         .login-card { 
             background: white; 
             color: #333; 
-            padding: 2rem; 
+            padding: 2.5rem; 
             border-radius: 30px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
             text-align: center; 
             width: 100%; 
-            max-width: 400px; /* לא יהיה רחב מדי במחשב */
-            transition: transform 0.3s ease;
+            max-width: 400px;
         }
 
         h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #6C63FF; }
-        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; }
+        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; color: #555; }
 
-        /* 2. תיקון כפתור גוגל */
         .google-btn { 
             background: #fff; 
             color: #757575; 
             border: 1px solid #ddd; 
-            padding: 12px; 
+            padding: 14px; 
             border-radius: 50px; 
             font-size: 1.1rem; 
             font-weight: 600; 
@@ -56,43 +55,36 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .google-btn:hover { background: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .google-icon { width: 24px; height: 24px; }
+        .google-icon { width: 22px; height: 22px; }
 
-        /* כפתור התקנה */
         #installBtn {
-            margin-top: 15px;
+            margin-top: 20px;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid white;
             color: white;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 20px;
-            display: none; /* יופיע רק אם אפשר להתקין */
+            display: none;
             cursor: pointer;
+            font-weight: bold;
         }
 
         footer { margin-top: auto; padding: 20px; font-size: 1rem; }
-        footer a { color: #FFD700; text-decoration: none; font-weight: bold; border-bottom: 2px solid transparent; transition: 0.3s; }
-        footer a:hover { border-bottom: 2px solid #FFD700; }
-
-        /* התאמה למסכים קטנים מאוד */
-        @media (max-width: 350px) {
-            h1 { font-size: 1.8rem; }
-            .login-card { padding: 1.5rem; }
-        }
+        footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
         <h1>מבחן האגו 🤫</h1>
-        <p>כדי להתחיל ליצור חידון שיוכיח מי החברים האמיתיים שלך, התחבר בקליק:</p>
+        <p>בוא נראה מי החברים האמיתיים שלך. התחבר עכשיו:</p>
         
         <button class="google-btn" id="loginBtn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="Google Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="G">
             התחברות עם Google
         </button>
 
-        <button id="installBtn">התקן אפליקציה 📲</button>
+        <button id="installBtn">התקן כאפליקציה 📲</button>
     </div>
 
     <footer>
@@ -116,40 +108,31 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        /* 4. פתרון לבעיית ההתחברות: שימוש ב-Redirect במקום Popup */
-        // בדפדפנים של פלאפון (במיוחד בתוך אפליקציות כמו וואטסאפ), פופ-אפים נחסמים.
         document.getElementById('loginBtn').addEventListener('click', () => {
             signInWithRedirect(auth, provider);
         });
 
-        // בדיקה אם המשתמש חזר מהתחברות מוצלחת
         getRedirectResult(auth).then((result) => {
-            if (result?.user || auth.currentUser) {
+            if (result?.user) {
                 window.location.href = 'create.html';
             }
         });
 
-        /* 3. אפשרות להתקנה (PWA) */
+        // לוגיקת התקנה
         let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.style.display = 'block';
+            document.getElementById('installBtn').style.display = 'inline-block';
         });
 
-        installBtn.addEventListener('click', () => {
+        document.getElementById('installBtn').addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        installBtn.style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                });
+                deferredPrompt = null;
             }
         });
     </script>
 </body>
 </html>
+
