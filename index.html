@@ -1,164 +1,259 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מבחן האגו - כניסה</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ego Test - מבחן האגו</title>
+  
+  <style>
+    :root {
+      --primary-color: #6a11cb;
+      --secondary-color: #2575fc;
+      --text-color: #ffffff;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
 
-    <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #6C63FF 0%, #4B45B2 100%); 
-            color: white; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            margin: 0; 
-            overflow: hidden;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        /* עיצוב מרכזי */
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    body {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-        .login-card { 
-            background: white; 
-            color: #333; 
-            padding: 2.5rem 2rem; 
-            border-radius: 30px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-            text-align: center; 
-            width: 100%; 
-            max-width: 380px;
-            animation: fadeIn 0.5s ease-out;
-        }
+    .hidden {
+      display: none !important;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
 
-        h1 { font-size: 2.2rem; margin: 0 0 10px 0; color: #6C63FF; }
-        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; color: #555; }
+    .app-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-        .google-btn { 
-            background: #fff; 
-            color: #757575; 
-            border: 1px solid #ddd; 
-            padding: 14px; 
-            border-radius: 50px; 
-            font-size: 1.1rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 12px; 
-            width: 100%; 
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    h1 { margin-bottom: 10px; font-size: 1.8rem; }
+    p { margin-bottom: 20px; font-size: 1rem; opacity: 0.9; }
 
-        .google-btn:active { transform: scale(0.98); background: #f1f1f1; }
-        .google-icon { width: 22px; height: 22px; }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-align: right;
+      font-size: 1rem;
+    }
 
-        .error-msg {
-            color: #ff4d4d;
-            font-size: 0.85rem;
-            margin-top: 15px;
-            display: none;
-            background: #fff5f5;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #ffcccc;
-        }
+    input::placeholder { color: rgba(255, 255, 255, 0.7); }
 
-        footer { 
-            padding: 20px; 
-            text-align: center; 
-            font-size: 0.95rem; 
-        }
-        footer a { color: #FFD700; text-decoration: none; font-weight: bold; }
-    </style>
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--primary-color);
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn:hover { background: #f0f0f0; transform: translateY(-2px); }
+
+    #cookie-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    footer {
+      margin-top: auto;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
 
-    <main>
-        <div class="login-card">
-            <h1>מבחן האגו 🤫</h1>
-            <p>בוא נראה מי החברים האמיתיים שלך. התחבר עכשיו:</p>
-            
-            <button class="google-btn" id="loginBtn">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="google-icon" alt="G">
-                התחברות עם Google
-            </button>
+  <div id="cookie-banner" class="glass-panel hidden">
+    <p>אנו משתמשים בעוגיות (Cookies) כדי לשפר את החוויה שלך. האם אתה מאשר?</p>
+    <button id="accept-cookies" class="btn primary">מאושר</button>
+  </div>
 
-            <div id="errorDisplay" class="error-msg"></div>
-        </div>
-    </main>
+  <main class="app-container glass-panel">
+    <header>
+      <h1>מבחן האגו שלך</h1>
+      <p>גלה כמה החברים שלך באמת מכירים אותך!</p>
+    </header>
 
-    <footer>
-        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
-    </footer>
+    <div id="auth-section">
+      <input type="text" id="nickname" placeholder="הכנס כינוי..." maxlength="20" />
+      <button id="start-btn" class="btn">התחל</button>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithRedirect, getRedirectResult, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <div id="quiz-section" class="hidden">
+      </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
-            authDomain: "social-app-834c9.firebaseapp.com",
-            projectId: "social-app-834c9",
-            storageBucket: "social-app-834c9.firebasestorage.app",
-            messagingSenderId: "230666122567",
-            appId: "1:230666122567:web:ce69416816347597c2c862"
+    <div id="share-section" class="hidden">
+      <p>שתף את הקישור עם חברים:</p>
+      <input type="text" id="share-link" readonly />
+      <button id="copy-btn" class="btn">העתק קישור</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a></p>
+  </footer>
+
+  <script type="module">
+    // Import Firebase modules via CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
+      authDomain: "social-app-834c9.firebaseapp.com",
+      projectId: "social-app-834c9",
+      storageBucket: "social-app-834c9.firebasestorage.app",
+      messagingSenderId: "230666122567",
+      appId: "1:230666122567:web:ce69416816347597c2c862"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // DOM Elements
+    const cookieBanner = document.getElementById('cookie-banner');
+    const btnAcceptCookies = document.getElementById('accept-cookies');
+    const authSection = document.getElementById('auth-section');
+    const shareSection = document.getElementById('share-section');
+    const btnStart = document.getElementById('start-btn');
+    const inputNickname = document.getElementById('nickname');
+    const shareLinkInput = document.getElementById('share-link');
+    const btnCopy = document.getElementById('copy-btn');
+
+    // --- Standard Cookie & UUID Logic ---
+    function generateUUID() {
+        return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+    }
+
+    function checkCookies() {
+        const hasConsented = localStorage.getItem('cookieConsent');
+        if (!hasConsented) {
+            cookieBanner.classList.remove('hidden');
+        } else {
+            ensureUUID();
+        }
+    }
+
+    function ensureUUID() {
+        let uuid = localStorage.getItem('userUUID');
+        if (!uuid) {
+            uuid = generateUUID();
+            localStorage.setItem('userUUID', uuid);
+        }
+        return uuid;
+    }
+
+    btnAcceptCookies.addEventListener('click', () => {
+        localStorage.setItem('cookieConsent', 'true');
+        cookieBanner.classList.add('hidden');
+        ensureUUID();
+    });
+
+    // --- App Flow Logic ---
+    btnStart.addEventListener('click', async () => {
+        const nickname = inputNickname.value.trim();
+        if (!nickname) return alert('אנא הכנס כינוי');
+        if (!localStorage.getItem('cookieConsent')) return alert('עליך לאשר עוגיות (Cookies) כדי להמשיך');
+
+        const uuid = ensureUUID();
+        btnStart.textContent = 'טוען...';
+        btnStart.disabled = true;
+        
+        // Example Quiz Payload
+        const quizData = {
+            creatorId: uuid,
+            creatorName: nickname,
+            createdAt: new Date().toISOString(),
+            questions: [
+                { q: "מה האוכל האהוב עליי?", a: "פיצה" },
+                { q: "לאן הייתי רוצה לטוס?", a: "יפן" }
+            ] 
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        const errorDisplay = document.getElementById('errorDisplay');
-
-        function showError(msg) {
-            errorDisplay.innerText = msg;
-            errorDisplay.style.display = 'block';
+        try {
+            // Save to Firestore
+            const docRef = await addDoc(collection(db, "quizzes"), quizData);
+            
+            // Update UI
+            authSection.classList.add('hidden');
+            shareSection.classList.remove('hidden');
+            
+            // Generate Share Link (Handles GitHub Pages routing)
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${baseUrl.replace(/\/$/, '')}?id=${docRef.id}`;
+            shareLinkInput.value = shareUrl;
+            
+        } catch (e) {
+            console.error("Error adding document: ", e);
+            alert("אירעה שגיאה ביצירת המבחן. אנא נסה שוב.");
+            btnStart.textContent = 'התחל';
+            btnStart.disabled = false;
         }
+    });
 
-        // 1. בדיקה אם המשתמש כבר מחובר
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.location.replace('create.html');
-            }
-        });
+    btnCopy.addEventListener('click', () => {
+        shareLinkInput.select();
+        document.execCommand('copy');
+        btnCopy.textContent = 'הועתק!';
+        setTimeout(() => btnCopy.textContent = 'העתק קישור', 2000);
+    });
 
-        // 2. כפתור התחברות
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            errorDisplay.style.display = 'none';
-            signInWithRedirect(auth, provider).catch(err => {
-                showError("שגיאה ראשונית: " + err.message);
-            });
-        });
-
-        // 3. טיפול בתוצאה שחוזרת מגוגל - כאן נתפוס את הבעיה האמיתית
-        getRedirectResult(auth).then((result) => {
-            if (result?.user) {
-                window.location.replace('create.html');
-            }
-        }).catch((error) => {
-            console.error(error);
-            // כאן המערכת תגיד לך בדיוק מה חסר (למשל Auth Domain)
-            showError("שגיאת התחברות: " + error.code + " - " + error.message);
-        });
-    </script>
+    // Initialize App
+    checkCookies();
+  </script>
 </body>
 </html>
