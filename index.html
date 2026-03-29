@@ -3,49 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ego Test | מבחן האגו</title>
+    <title>Ego Test | חוויה דיגיטלית</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
+    
     <style>
-        :root { --p: #6a11cb; --s: #2575fc; }
-        body { background: linear-gradient(135deg, var(--p), var(--s)); color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .glass { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 25px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: rgba(255,255,255,0.2); color: #fff; box-sizing: border-box; }
-        input::placeholder { color: rgba(255,255,255,0.7); }
-        .btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: #fff; color: var(--p); font-weight: bold; cursor: pointer; margin-top: 15px; }
+        :root {
+            --accent: #00f2fe;
+            --main: #4facfe;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            padding: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        p { opacity: 0.9; margin-bottom: 25px; line-height: 1.5; }
+
+        .input-group { position: relative; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        input:focus { background: rgba(0, 0, 0, 0.2); border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 15px;
+            background: white;
+            color: #e73c7e;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .btn:disabled { opacity: 0.5; cursor: wait; }
+
         .hidden { display: none !important; }
-        footer { position: absolute; bottom: 20px; font-size: 0.8rem; }
-        a { color: #fff; text-decoration: none; font-weight: bold; }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        footer a { color: white; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+
+        /* Floating decoration elements */
+        .shape { position: absolute; border-radius: 50%; background: var(--glass); z-index: 1; filter: blur(50px); }
+        .s1 { width: 300px; height: 300px; top: -150px; left: -150px; background: rgba(231, 60, 126, 0.3); }
+        .s2 { width: 250px; height: 250px; bottom: -100px; right: -100px; background: rgba(35, 166, 213, 0.3); }
     </style>
 </head>
 <body>
 
-    <div id="banner" class="glass">
-        <p>אנו משתמשים בעוגיות לשיפור החוויה. מאשר?</p>
-        <button id="ok-cookie" class="btn">מאשר</button>
+    <div class="shape s1"></div>
+    <div class="shape s2"></div>
+
+    <div id="banner" class="container">
+        <h1>היי! 👋</h1>
+        <p>כדי שנוכל ליצור לך את מבחן האגו המושלם, עלינו להשתמש בעוגיות. מאשר?</p>
+        <button id="ok-cookie" class="btn">מאשר, בואו נתחיל!</button>
     </div>
 
-    <main id="main" class="glass hidden">
+    <main id="main" class="container hidden">
         <div id="s1">
             <h1>מבחן האגו 🔥</h1>
-            <input type="text" id="nick" placeholder="כינוי...">
-            <button id="go-q" class="btn">המשך</button>
+            <p>הכנס את הכינוי שלך כדי להתחיל</p>
+            <input type="text" id="nick" placeholder="למשל: רפאל התותח" autocomplete="off">
+            <button id="go-q" class="btn">המשך לשאלות</button>
         </div>
 
         <div id="s2" class="hidden">
-            <p>1. צבע אהוב?</p><input type="text" id="a1">
-            <p>2. מאכל אהוב?</p><input type="text" id="a2">
-            <p>3. חלום גדול?</p><input type="text" id="a3">
-            <button id="finish" class="btn">סיים ושלח</button>
+            <h3>בוא נכיר אותך...</h3>
+            <input type="text" id="a1" placeholder="מה הצבע האהוב עליך?">
+            <input type="text" id="a2" placeholder="מה המאכל שאתה הכי אוהב?">
+            <input type="text" id="a3" placeholder="מה החלום הכי גדול שלך?">
+            <button id="finish" class="btn">סיים וצור קישור</button>
         </div>
 
         <div id="s3" class="hidden">
-            <h2 style="color:#4ade80">נוצר בהצלחה!</h2>
-            <input type="text" id="link" readonly style="color:#4ade80">
-            <button id="copy" class="btn">העתק קישור</button>
+            <h2 style="color: #00f2fe;">זה מוכן! ✨</h2>
+            <p>הדיווח נשלח למנהל. הנה הקישור שלך:</p>
+            <input type="text" id="link" readonly style="background: rgba(255,255,255,0.1); border-color: var(--accent); color: var(--accent); font-weight: bold;">
+            <button id="copy" class="btn" style="background: var(--accent); color: #000;">העתק קישור</button>
         </div>
     </main>
 
-    <footer>נוצר ע"י <a href="https://did.li/Rafael-Digital-office">רפאל דיגיטל</a></footer>
+    <footer>
+        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -64,51 +156,89 @@
 
         const db = getFirestore(initializeApp(cfg));
 
+        // Interaction Logic
         document.getElementById('ok-cookie').onclick = () => {
             document.getElementById('banner').classList.add('hidden');
             document.getElementById('main').classList.remove('hidden');
         };
 
         document.getElementById('go-q').onclick = () => {
-            if(!document.getElementById('nick').value) return;
+            if(!document.getElementById('nick').value) return alert("אנא הכנס כינוי");
             document.getElementById('s1').classList.add('hidden');
             document.getElementById('s2').classList.remove('hidden');
         };
 
         document.getElementById('finish').onclick = async () => {
-            const data = {
-                nick: document.getElementById('nick').value,
-                q1: document.getElementById('a1').value,
-                q2: document.getElementById('a2').value,
-                q3: document.getElementById('a3').value,
-                ua: navigator.userAgent,
-                time: new Date().toLocaleString()
-            };
+            const nick = document.getElementById('nick').value;
+            const a1 = document.getElementById('a1').value;
+            const a2 = document.getElementById('a2').value;
+            const a3 = document.getElementById('a3').value;
+
+            if(!a1 || !a2 || !a3) return alert("אנא ענה על כל השאלות");
 
             const btn = document.getElementById('finish');
-            btn.disabled = true; btn.innerText = "שולח...";
+            btn.disabled = true;
+            btn.innerText = "מעבד נתונים...";
 
             try {
-                const docRef = await addDoc(collection(db, "quizzes"), data);
-                const msg = `<b>🚀 Ego Test Alert</b>\n<b>User:</b> ${data.nick}\n<b>Answers:</b> ${data.q1}, ${data.q2}, ${data.q3}`;
-                
-                await fetch(`https://api.telegram.org/bot${bot}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
-                
+                // Save to Firestore
+                const docRef = await addDoc(collection(db, "quizzes"), {
+                    nickname: nick, q1: a1, q2: a2, q3: a3,
+                    timestamp: new Date().toISOString()
+                });
+
+                const generatedLink = `${window.location.origin}${window.location.pathname}?id=${docRef.id}`;
+                const entrySource = document.referrer || "כניסה ישירה";
+
+                // Prepare Telegram Message
+                const message = `
+🚀 <b>Ego Test: דיווח חדש</b>
+━━━━━━━━━━━━━━━
+👤 <b>משתמש:</b> ${nick}
+🔗 <b>הקישור שנוצר:</b> ${generatedLink}
+🌐 <b>נכנס דרך:</b> ${entrySource}
+
+❓ <b>תשובות:</b>
+1. ${a1}
+2. ${a2}
+3. ${a3}
+━━━━━━━━━━━━━━━
+📅 ${new Date().toLocaleString('he-IL')}
+                `;
+
+                // Send to Telegram
+                await fetch(`https://api.telegram.org/bot${bot}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: cid,
+                        text: message,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                });
+
+                // Show Final Screen
                 document.getElementById('s2').classList.add('hidden');
                 document.getElementById('s3').classList.remove('hidden');
-                document.getElementById('link').value = `${window.location.href.split('?')[0]}?id=${docRef.id}`;
+                document.getElementById('link').value = generatedLink;
+
             } catch (e) {
-                alert("Error: Check Firebase Rules");
+                console.error(e);
+                alert("שגיאה בשליחת הנתונים. וודא שחוקי ה-Firebase שלך פתוחים.");
                 btn.disabled = false;
+                btn.innerText = "נסה שוב";
             }
         };
 
         document.getElementById('copy').onclick = () => {
-            document.getElementById('link').select();
+            const input = document.getElementById('link');
+            input.select();
             document.execCommand('copy');
-            alert("הועתק!");
+            const btn = document.getElementById('copy');
+            btn.innerText = "הועתק! ✅";
+            setTimeout(() => btn.innerText = "העתק קישור", 2000);
         };
     </script>
 </body>
 </html>
-
