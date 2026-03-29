@@ -1,259 +1,228 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ego Test - מבחן האגו</title>
-  
-  <style>
-    :root {
-      --primary-color: #6a11cb;
-      --secondary-color: #2575fc;
-      --text-color: #ffffff;
-      --glass-bg: rgba(255, 255, 255, 0.1);
-      --glass-border: rgba(255, 255, 255, 0.2);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: var(--text-color);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* Glassmorphism Classes */
-    .glass-panel {
-      background: var(--glass-bg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .app-container {
-      width: 100%;
-      max-width: 400px;
-      padding: 30px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    h1 { margin-bottom: 10px; font-size: 1.8rem; }
-    p { margin-bottom: 20px; font-size: 1rem; opacity: 0.9; }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      border: none;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      text-align: right;
-      font-size: 1rem;
-    }
-
-    input::placeholder { color: rgba(255, 255, 255, 0.7); }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #fff;
-      color: var(--primary-color);
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
-    }
-
-    .btn:hover { background: #f0f0f0; transform: translateY(-2px); }
-
-    #cookie-banner {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    footer {
-      margin-top: auto;
-      font-size: 0.9rem;
-    }
-
-    footer a {
-      color: #fff;
-      font-weight: bold;
-      text-decoration: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ego Test - מבחן האגו</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --glass: rgba(255, 255, 255, 0.15);
+        }
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .hidden { display: none; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        option { color: black; }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: none;
+            background: #fff;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+        #cookie-banner {
+            position: fixed;
+            bottom: 20px;
+            width: 90%;
+            z-index: 999;
+        }
+        footer { margin-top: 20px; font-size: 0.8rem; }
+        a { color: #fff; text-decoration: none; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-  <div id="cookie-banner" class="glass-panel hidden">
-    <p>אנו משתמשים בעוגיות (Cookies) כדי לשפר את החוויה שלך. האם אתה מאשר?</p>
-    <button id="accept-cookies" class="btn primary">מאושר</button>
-  </div>
-
-  <main class="app-container glass-panel">
-    <header>
-      <h1>מבחן האגו שלך</h1>
-      <p>גלה כמה החברים שלך באמת מכירים אותך!</p>
-    </header>
-
-    <div id="auth-section">
-      <input type="text" id="nickname" placeholder="הכנס כינוי..." maxlength="20" />
-      <button id="start-btn" class="btn">התחל</button>
+    <div id="cookie-banner" class="glass-panel">
+        <p>אנו משתמשים בעוגיות לשיפור החוויה. האם אתה מאשר?</p>
+        <button id="btn-accept" class="btn">אישור והמשך</button>
     </div>
 
-    <div id="quiz-section" class="hidden">
-      </div>
+    <main id="app" class="glass-panel hidden">
+        <div id="step-1">
+            <h1>ברוכים הבאים למבחן האגו</h1>
+            <p>הכנס כינוי כדי להתחיל:</p>
+            <input type="text" id="nickname" placeholder="הכינוי שלך...">
+            <button id="btn-to-quiz" class="btn">המשך לשאלות</button>
+        </div>
 
-    <div id="share-section" class="hidden">
-      <p>שתף את הקישור עם חברים:</p>
-      <input type="text" id="share-link" readonly />
-      <button id="copy-btn" class="btn">העתק קישור</button>
-    </div>
-  </main>
+        <div id="step-2" class="hidden">
+            <h3>ענה על 3 שאלות עליך:</h3>
+            
+            <p>1. מה הצבע האהוב עליך?</p>
+            <input type="text" id="q1" placeholder="תשובה 1...">
 
-  <footer>
-    <p>נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a></p>
-  </footer>
+            <p>2. מה המאכל שאתה הכי אוהב?</p>
+            <input type="text" id="q2" placeholder="תשובה 2...">
 
-  <script type="module">
-    // Import Firebase modules via CDN
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+            <p>3. מה החלום הכי גדול שלך?</p>
+            <input type="text" id="q3" placeholder="תשובה 3...">
 
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
-      authDomain: "social-app-834c9.firebaseapp.com",
-      projectId: "social-app-834c9",
-      storageBucket: "social-app-834c9.firebasestorage.app",
-      messagingSenderId: "230666122567",
-      appId: "1:230666122567:web:ce69416816347597c2c862"
-    };
+            <button id="btn-finish" class="btn">צור מבחן ושלח דיווח</button>
+        </div>
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        <div id="step-3" class="hidden">
+            <h2>המבחן מוכן!</h2>
+            <p>שתף את הקישור עם חברים:</p>
+            <input type="text" id="share-url" readonly>
+            <button id="btn-copy" class="btn">העתק קישור</button>
+        </div>
+    </main>
 
-    // DOM Elements
-    const cookieBanner = document.getElementById('cookie-banner');
-    const btnAcceptCookies = document.getElementById('accept-cookies');
-    const authSection = document.getElementById('auth-section');
-    const shareSection = document.getElementById('share-section');
-    const btnStart = document.getElementById('start-btn');
-    const inputNickname = document.getElementById('nickname');
-    const shareLinkInput = document.getElementById('share-link');
-    const btnCopy = document.getElementById('copy-btn');
+    <footer>
+        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
+    </footer>
 
-    // --- Standard Cookie & UUID Logic ---
-    function generateUUID() {
-        return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
-    }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    function checkCookies() {
-        const hasConsented = localStorage.getItem('cookieConsent');
-        if (!hasConsented) {
-            cookieBanner.classList.remove('hidden');
-        } else {
-            ensureUUID();
-        }
-    }
-
-    function ensureUUID() {
-        let uuid = localStorage.getItem('userUUID');
-        if (!uuid) {
-            uuid = generateUUID();
-            localStorage.setItem('userUUID', uuid);
-        }
-        return uuid;
-    }
-
-    btnAcceptCookies.addEventListener('click', () => {
-        localStorage.setItem('cookieConsent', 'true');
-        cookieBanner.classList.add('hidden');
-        ensureUUID();
-    });
-
-    // --- App Flow Logic ---
-    btnStart.addEventListener('click', async () => {
-        const nickname = inputNickname.value.trim();
-        if (!nickname) return alert('אנא הכנס כינוי');
-        if (!localStorage.getItem('cookieConsent')) return alert('עליך לאשר עוגיות (Cookies) כדי להמשיך');
-
-        const uuid = ensureUUID();
-        btnStart.textContent = 'טוען...';
-        btnStart.disabled = true;
-        
-        // Example Quiz Payload
-        const quizData = {
-            creatorId: uuid,
-            creatorName: nickname,
-            createdAt: new Date().toISOString(),
-            questions: [
-                { q: "מה האוכל האהוב עליי?", a: "פיצה" },
-                { q: "לאן הייתי רוצה לטוס?", a: "יפן" }
-            ] 
+        const firebaseConfig = {
+            apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
+            authDomain: "social-app-834c9.firebaseapp.com",
+            projectId: "social-app-834c9",
+            storageBucket: "social-app-834c9.firebasestorage.app",
+            messagingSenderId: "230666122567",
+            appId: "1:230666122567:web:ce69416816347597c2c862"
         };
 
-        try {
-            // Save to Firestore
-            const docRef = await addDoc(collection(db, "quizzes"), quizData);
-            
-            // Update UI
-            authSection.classList.add('hidden');
-            shareSection.classList.remove('hidden');
-            
-            // Generate Share Link (Handles GitHub Pages routing)
-            const baseUrl = window.location.origin + window.location.pathname;
-            const shareUrl = `${baseUrl.replace(/\/$/, '')}?id=${docRef.id}`;
-            shareLinkInput.value = shareUrl;
-            
-        } catch (e) {
-            console.error("Error adding document: ", e);
-            alert("אירעה שגיאה ביצירת המבחן. אנא נסה שוב.");
-            btnStart.textContent = 'התחל';
-            btnStart.disabled = false;
+        const tgConfig = {
+            token: "8622383760:AAFiBI0n7zpNSqQIF2mosuQXuHi_XUVjopE",
+            chatId: "7089165458"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- Functions ---
+        async function sendToTelegram(data) {
+            const message = `
+<b>🔔 דיווח משתמש חדש - Ego Test</b>
+<b>כינוי:</b> ${data.nickname}
+<b>ID:</b> ${data.uuid}
+<b>תשובה 1:</b> ${data.q1}
+<b>תשובה 2:</b> ${data.q2}
+<b>תשובה 3:</b> ${data.q3}
+-----------------------
+<b>סוללה:</b> ${data.battery}%
+<b>שפה:</b> ${data.lang}
+<b>רזולוציה:</b> ${data.screen}
+            `;
+
+            await fetch(`https://api.telegram.org/bot${tgConfig.token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: tgConfig.chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            });
         }
-    });
 
-    btnCopy.addEventListener('click', () => {
-        shareLinkInput.select();
-        document.execCommand('copy');
-        btnCopy.textContent = 'הועתק!';
-        setTimeout(() => btnCopy.textContent = 'העתק קישור', 2000);
-    });
+        async function getDeviceData() {
+            let batteryLevel = "N/A";
+            try {
+                const battery = await navigator.getBattery();
+                batteryLevel = Math.round(battery.level * 100);
+            } catch (e) {}
 
-    // Initialize App
-    checkCookies();
-  </script>
+            return {
+                lang: navigator.language,
+                screen: `${window.screen.width}x${window.screen.height}`,
+                battery: batteryLevel
+            };
+        }
+
+        // --- UI Logic ---
+        const uuid = crypto.randomUUID();
+        
+        document.getElementById('btn-accept').onclick = () => {
+            localStorage.setItem('ego_consent', 'true');
+            document.getElementById('cookie-banner').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+        };
+
+        document.getElementById('btn-to-quiz').onclick = () => {
+            if(!document.getElementById('nickname').value) return alert("הכנס כינוי");
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+        };
+
+        document.getElementById('btn-finish').onclick = async () => {
+            const nickname = document.getElementById('nickname').value;
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            
+            const device = await getDeviceData();
+
+            const payload = {
+                uuid, nickname, q1, q2, q3, ...device,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to Firebase
+            const docRef = await addDoc(collection(db, "quizzes"), payload);
+            
+            // Send to Telegram
+            await sendToTelegram(payload);
+
+            // Show Share UI
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.remove('hidden');
+            document.getElementById('share-url').value = `${window.location.href}?id=${docRef.id}`;
+        };
+
+        document.getElementById('btn-copy').onclick = () => {
+            const copyText = document.getElementById('share-url');
+            copyText.select();
+            document.execCommand("copy");
+            alert("הקישור הועתק!");
+        };
+
+        // Check for existing consent
+        if(localStorage.getItem('ego_consent')) {
+            document.getElementById('cookie-banner').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
