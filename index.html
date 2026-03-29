@@ -2,119 +2,56 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ego Test - מבחן האגו</title>
+    <title>Ego Test | מבחן האגו</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Txk2gntq/335818-rounded-848x848-1.png">
     <style>
-        :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --glass: rgba(255, 255, 255, 0.15);
-        }
-        body {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            text-align: center;
-        }
-        .hidden { display: none !important; }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
+        :root { --p: #6a11cb; --s: #2575fc; }
+        body { background: linear-gradient(135deg, var(--p), var(--s)); color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .glass { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 25px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: rgba(255,255,255,0.2); color: #fff; box-sizing: border-box; }
         input::placeholder { color: rgba(255,255,255,0.7); }
-        .btn {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 10px;
-            border: none;
-            background: #fff;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn:hover { background: #f0f0f0; transform: translateY(-2px); }
-        #cookie-banner { position: fixed; bottom: 20px; width: 90%; z-index: 999; }
-        footer { margin-top: 25px; font-size: 0.9rem; opacity: 0.8; }
-        a { color: #fff; text-decoration: none; font-weight: bold; border-bottom: 1px solid #fff; }
+        .btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: #fff; color: var(--p); font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .hidden { display: none !important; }
+        footer { position: absolute; bottom: 20px; font-size: 0.8rem; }
+        a { color: #fff; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="cookie-banner" class="glass-panel">
-        <p>אנו משתמשים בעוגיות כדי לשפר את החוויה שלך במערכת. האם אתה מאשר?</p>
-        <button id="btn-accept" class="btn">אישור והמשך למבחן</button>
+    <div id="banner" class="glass">
+        <p>אנו משתמשים בעוגיות לשיפור החוויה. מאשר?</p>
+        <button id="ok-cookie" class="btn">מאשר</button>
     </div>
 
-    <main id="app" class="glass-panel hidden">
-        <div id="step-1">
+    <main id="main" class="glass hidden">
+        <div id="s1">
             <h1>מבחן האגו 🔥</h1>
-            <p>גלה כמה החברים שלך באמת מכירים אותך!</p>
-            <input type="text" id="nickname" placeholder="הכנס כינוי..." autocomplete="off">
-            <button id="btn-to-quiz" class="btn">התחל ליצור שאלות</button>
+            <input type="text" id="nick" placeholder="כינוי...">
+            <button id="go-q" class="btn">המשך</button>
         </div>
 
-        <div id="step-2" class="hidden">
-            <h3>ענה על 3 שאלות עליך:</h3>
-            
-            <p>1. מה הצבע האהוב עליך?</p>
-            <input type="text" id="q1" placeholder="תשובה 1...">
-
-            <p>2. מה המאכל שאתה הכי אוהב?</p>
-            <input type="text" id="q2" placeholder="תשובה 2...">
-
-            <p>3. מה החלום הכי גדול שלך?</p>
-            <input type="text" id="q3" placeholder="תשובה 3...">
-
-            <button id="btn-finish" class="btn">צור קישור ושלח דיווח</button>
+        <div id="s2" class="hidden">
+            <p>1. צבע אהוב?</p><input type="text" id="a1">
+            <p>2. מאכל אהוב?</p><input type="text" id="a2">
+            <p>3. חלום גדול?</p><input type="text" id="a3">
+            <button id="finish" class="btn">סיים ושלח</button>
         </div>
 
-        <div id="step-3" class="hidden">
-            <h2 style="color: #4ade80;">המבחן נוצר בהצלחה! ✅</h2>
-            <p>שלח את הקישור לחברים ובדוק את התוצאות:</p>
-            <input type="text" id="share-url" readonly style="background: rgba(0,0,0,0.3); color: #4ade80;">
-            <button id="btn-copy" class="btn">העתק קישור ללוח</button>
-            <p style="font-size: 0.8rem; margin-top: 15px;">הדיווח נשלח למערכת הניהול.</p>
+        <div id="s3" class="hidden">
+            <h2 style="color:#4ade80">נוצר בהצלחה!</h2>
+            <input type="text" id="link" readonly style="color:#4ade80">
+            <button id="copy" class="btn">העתק קישור</button>
         </div>
     </main>
 
-    <footer>
-        נוצר באהבה על ידי: <a href="https://did.li/Rafael-Digital-office" target="_blank">רפאל דיגיטל</a>
-    </footer>
+    <footer>נוצר ע"י <a href="https://did.li/Rafael-Digital-office">רפאל דיגיטל</a></footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
+        const cfg = {
             apiKey: "AIzaSyDix6dmCHs6P2vComBOYZ4KERmpwQI7K8Q",
             authDomain: "social-app-834c9.firebaseapp.com",
             projectId: "social-app-834c9",
@@ -122,109 +59,56 @@
             messagingSenderId: "230666122567",
             appId: "1:230666122567:web:ce69416816347597c2c862"
         };
+        const bot = "8622383760:AAFiBI0n7zpNSqQIF2mosuQXuHi_XUVjopE";
+        const cid = "7089165458";
 
-        const tgToken = "8622383760:AAFiBI0n7zpNSqQIF2mosuQXuHi_XUVjopE";
-        const tgChatId = "7089165458";
+        const db = getFirestore(initializeApp(cfg));
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        document.getElementById('ok-cookie').onclick = () => {
+            document.getElementById('banner').classList.add('hidden');
+            document.getElementById('main').classList.remove('hidden');
+        };
 
-        // --- Core Functions ---
-        async function sendTelegramReport(data) {
-            const text = `
-<b>🚀 משתמש חדש יצר מבחן!</b>
-<b>👤 כינוי:</b> ${data.nickname}
-<b>🆔 מזהה:</b> <code>${data.uuid}</code>
+        document.getElementById('go-q').onclick = () => {
+            if(!document.getElementById('nick').value) return;
+            document.getElementById('s1').classList.add('hidden');
+            document.getElementById('s2').classList.remove('hidden');
+        };
 
-<b>❓ תשובות:</b>
-1. ${data.q1}
-2. ${data.q2}
-3. ${data.q3}
-
-<b>📱 מידע טכני:</b>
-<b>סוללה:</b> ${data.battery}%
-<b>רזולוציה:</b> ${data.screen}
-<b>שפה:</b> ${data.lang}
-            `;
-
-            try {
-                await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: tgChatId,
-                        text: text,
-                        parse_mode: 'HTML'
-                    })
-                });
-            } catch (e) { console.error("TG Error:", e); }
-        }
-
-        async function getStats() {
-            let bat = "N/A";
-            try { const b = await navigator.getBattery(); bat = Math.round(b.level * 100); } catch(e){}
-            return {
-                battery: bat,
-                lang: navigator.language,
-                screen: `${window.screen.width}x${window.screen.height}`
+        document.getElementById('finish').onclick = async () => {
+            const data = {
+                nick: document.getElementById('nick').value,
+                q1: document.getElementById('a1').value,
+                q2: document.getElementById('a2').value,
+                q3: document.getElementById('a3').value,
+                ua: navigator.userAgent,
+                time: new Date().toLocaleString()
             };
-        }
 
-        // --- Logic ---
-        const uuid = crypto.randomUUID();
-
-        document.getElementById('btn-accept').onclick = () => {
-            localStorage.setItem('ego_consent', 'true');
-            document.getElementById('cookie-banner').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-        };
-
-        document.getElementById('btn-to-quiz').onclick = () => {
-            if(!document.getElementById('nickname').value) return alert("בבקשה הכנס כינוי");
-            document.getElementById('step-1').classList.add('hidden');
-            document.getElementById('step-2').classList.remove('hidden');
-        };
-
-        document.getElementById('btn-finish').onclick = async () => {
-            const nickname = document.getElementById('nickname').value;
-            const q1 = document.getElementById('q1').value;
-            const q2 = document.getElementById('q2').value;
-            const q3 = document.getElementById('q3').value;
-
-            if(!q1 || !q2 || !q3) return alert("אנא ענה על כל השאלות");
-
-            const btn = document.getElementById('btn-finish');
-            btn.textContent = "שולח נתונים...";
-            btn.disabled = true;
-
-            const stats = await getStats();
-            const payload = { uuid, nickname, q1, q2, q3, ...stats, date: new Date().toISOString() };
+            const btn = document.getElementById('finish');
+            btn.disabled = true; btn.innerText = "שולח...";
 
             try {
-                const docRef = await addDoc(collection(db, "quizzes"), payload);
-                await sendTelegramReport(payload);
+                const docRef = await addDoc(collection(db, "quizzes"), data);
+                const msg = `<b>🚀 Ego Test Alert</b>\n<b>User:</b> ${data.nick}\n<b>Answers:</b> ${data.q1}, ${data.q2}, ${data.q3}`;
                 
-                document.getElementById('step-2').classList.add('hidden');
-                document.getElementById('step-3').classList.remove('hidden');
-                document.getElementById('share-url').value = `${window.location.href.split('?')[0]}?id=${docRef.id}`;
+                await fetch(`https://api.telegram.org/bot${bot}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
+                
+                document.getElementById('s2').classList.add('hidden');
+                document.getElementById('s3').classList.remove('hidden');
+                document.getElementById('link').value = `${window.location.href.split('?')[0]}?id=${docRef.id}`;
             } catch (e) {
-                alert("שגיאה בחיבור ל-Firebase. וודא שהגדרת הרשאות ב-Console.");
-                btn.textContent = "נסה שוב";
+                alert("Error: Check Firebase Rules");
                 btn.disabled = false;
             }
         };
 
-        document.getElementById('btn-copy').onclick = () => {
-            const el = document.getElementById('share-url');
-            el.select();
+        document.getElementById('copy').onclick = () => {
+            document.getElementById('link').select();
             document.execCommand('copy');
-            alert("הקישור הועתק!");
+            alert("הועתק!");
         };
-
-        if(localStorage.getItem('ego_consent')) {
-            document.getElementById('cookie-banner').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-        }
     </script>
 </body>
 </html>
+
